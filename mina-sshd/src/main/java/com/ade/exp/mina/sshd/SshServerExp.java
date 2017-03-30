@@ -23,8 +23,8 @@ public class SshServerExp {
         sshd.setPort(2222);
         sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(new File("hostkey.ser")));
         // 测试 一律通过
-        sshd.setPasswordAuthenticator((s, s2, serverSession) -> "liyang".equals(s));
-        sshd.setPublickeyAuthenticator((s, publicKey, serverSession) -> "liyang".equals(s));
+        sshd.setPasswordAuthenticator((s, s2, serverSession) -> "guest".equals(s));
+        sshd.setPublickeyAuthenticator((s, publicKey, serverSession) -> "guest".equals(s));
 
         sshd.setShellFactory(MyCommand::new);
 //        sshd.setCommandFactory(s -> new MyCommand());
