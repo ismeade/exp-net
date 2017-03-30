@@ -1,9 +1,12 @@
 package com.ade.exp.mina.sshd;
 
 import org.apache.sshd.common.util.OsUtils;
+import org.apache.sshd.server.Command;
+import org.apache.sshd.server.CommandFactory;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.config.keys.DefaultAuthorizedKeysAuthenticator;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
+import org.apache.sshd.server.scp.ScpCommandFactory;
 import org.apache.sshd.server.shell.ProcessShellFactory;
 
 import java.io.File;
@@ -27,12 +30,12 @@ public class SshServerExp {
 
 //        sshd.setShellFactory(new ProcessShellFactory(OsUtils.WINDOWS_COMMAND));
 
-        if (OsUtils.isUNIX()) {
-            sshd.setShellFactory(new ProcessShellFactory(OsUtils.LINUX_COMMAND));
-        } else {
+//        if (OsUtils.isUNIX()) {
+//            sshd.setShellFactory(new ProcessShellFactory(OsUtils.LINUX_COMMAND));
+//        } else {
             sshd.setShellFactory(MyCommand::new);
-        }
-        
+//        }
+
 //        sshd.setCommandFactory(s -> new MyCommand());
         try {
             sshd.start();
