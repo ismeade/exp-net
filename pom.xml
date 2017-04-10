@@ -11,6 +11,7 @@
         <module>mina-client</module>
         <module>mina-sshd</module>
         <module>tomcat-embed</module>
+        <module>mina-server</module>
     </modules>
 
     <packaging>pom</packaging>
