@@ -12,6 +12,8 @@
         <module>mina-sshd</module>
         <module>tomcat-embed</module>
         <module>mina-server</module>
+        <module>netty-server</module>
+        <module>netty-client</module>
     </modules>
 
     <packaging>pom</packaging>
