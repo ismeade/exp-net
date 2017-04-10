@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class MinaClient implements Runnable {
 
-    private static final int port = 8031;
+    private static final int port = 8999;
 
     public void start() {
         // 创建一个socket连接
@@ -32,13 +32,13 @@ public class MinaClient implements Runnable {
         // 设置链接超时时间
         connector.setConnectTimeoutCheckInterval(30);
         // 连接服务器，知道端口、地址
-        ConnectFuture cf = connector.connect(new InetSocketAddress("192.168.101.135", port));
+        ConnectFuture cf = connector.connect(new InetSocketAddress("localhost", port));
         // 等待连接创建完成
         cf.awaitUninterruptibly();
         cf.getSession().write("{\"data\":{\"innerCode\":\"01000032\",\"msgType\":\"register\"},\"from\":\"vmBox\",\"to\":\"kcs\",\"sn\":6240536155213791232,\"needResend\":false}");
         while (true) {
             try {
-                TimeUnit.SECONDS.sleep(10);
+                TimeUnit.SECONDS.sleep(5);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -54,7 +54,7 @@ public class MinaClient implements Runnable {
     }
 
     public static void main(String[] args) {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             new Thread(new MinaClient()).start();
         }
     }

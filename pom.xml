@@ -5,11 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ade.exp</groupId>
-    <artifactId>exp-mina</artifactId>
+    <artifactId>exp-network</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>mina-client</module>
         <module>mina-sshd</module>
+        <module>tomcat-embed</module>
     </modules>
 
     <packaging>pom</packaging>
