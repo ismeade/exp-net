@@ -1,4 +1,4 @@
-package com.ade.exp.mina.client;
+package com.ade.exp.net.mina.client;
 
 import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
 import org.apache.mina.core.future.ConnectFuture;

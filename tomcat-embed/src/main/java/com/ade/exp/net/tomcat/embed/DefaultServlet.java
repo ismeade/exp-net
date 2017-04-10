@@ -1,4 +1,4 @@
-package com.ade.exp.network.tomcat.embed;
+package com.ade.exp.net.tomcat.embed;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
 /**
  *
