@@ -22,8 +22,9 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         ctx.writeAndFlush("response.\n");//写回数据，
     }
     public void channelReadComplete(ChannelHandlerContext ctx) {
-        ctx.writeAndFlush(Unpooled.EMPTY_BUFFER) //flush掉所有写回的数据
-                .addListener(ChannelFutureListener.CLOSE); //当flush完成后关闭channel
+        System.out.println("channelReadComplete");
+//        ctx.writeAndFlush(Unpooled.EMPTY_BUFFER) //flush掉所有写回的数据
+//                .addListener(ChannelFutureListener.CLOSE); //当flush完成后关闭channel
     }
     public void exceptionCaught(ChannelHandlerContext ctx,Throwable cause) {
         logger.error(cause.getLocalizedMessage(), cause);

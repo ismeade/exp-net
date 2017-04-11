@@ -1,31 +1,29 @@
-package com.ade.exp.net.netty.server;
+package com.ade.exp.net.netty.http;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.LineBasedFrameDecoder;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
-import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequestDecoder;
+import io.netty.handler.stream.ChunkedWriteHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- * Created by liyang on 2017/4/10.
+ * 未完成
+ * Created by liyang on 2017/4/11.
  */
-public class NettyServer {
+public class NettyHttpServer {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final int port = 8999;
+    private static final int port = 8080;
 
     public void startUp() throws InterruptedException {
         ServerBootstrap b = new ServerBootstrap(); // 引导辅助程序
@@ -46,18 +44,15 @@ public class NettyServer {
                 b.channel(NioServerSocketChannel.class);
             }
             b.group(bossLoop, workerLoop)
-                    .option(ChannelOption.SO_BACKLOG, 1024)
                     .childHandler(new ChannelInitializer<SocketChannel>() { //有连接到达时会创建一个channel
                         protected void initChannel(SocketChannel ch) throws Exception {
                             // pipeline管理channel中的Handler，在channel队列中添加一个handler来处理业务
-                            ch.pipeline().addLast(new LineBasedFrameDecoder(1024))
-                                    .addLast(new ReadTimeoutHandler(10)) // 空闲超时时间...
-                                    .addLast(new StringDecoder())
-                                    .addLast(new StringEncoder())
-                                    .addLast(new NettyServerHandler());
+                            ch.pipeline().addLast("http-decoder", new HttpRequestDecoder())
+                                    .addLast("http-aggregator", new HttpObjectAggregator(65535))
+                                    .addLast("http-chunked", new ChunkedWriteHandler())
+                                    .addLast(new HttpServerHandler());
                         }
-                    })
-                    .childOption(ChannelOption.SO_KEEPALIVE, true);
+                    });
             ChannelFuture f = b.bind(port).sync();// 配置完成，开始绑定server，通过调用sync同步方法阻塞直到绑定成功
             if (f.isSuccess()) {
                 logger.info(this.getClass().getName() + " started and listen on " + f.channel().localAddress());
@@ -73,7 +68,7 @@ public class NettyServer {
 
     public static void main(String[] args) {
         try {
-            new NettyServer().startUp();
+            new NettyHttpServer().startUp();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

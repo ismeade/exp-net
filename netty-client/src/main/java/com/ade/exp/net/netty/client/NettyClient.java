@@ -13,6 +13,8 @@ import io.netty.handler.codec.string.StringEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  *
  * Created by liyang on 2017/4/10.
@@ -49,12 +51,11 @@ public class NettyClient {
                 logger.info(f.channel().remoteAddress().toString());
                 logger.info("connect server  成功---------");
             }
-//            while (true) {
-//                TimeUnit.SECONDS.sleep(5);
-//                f.channel().writeAndFlush(Unpooled.copiedBuffer("heart.\n", CharsetUtil.UTF_8));
-//
-//            }
-            f.channel().closeFuture().sync();
+            while (true) {
+                TimeUnit.SECONDS.sleep(5);
+                f.channel().writeAndFlush("heart.\n");
+            }
+//            f.channel().closeFuture().sync();
         } finally {
             group.shutdownGracefully().sync();
         }
