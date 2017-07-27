@@ -52,7 +52,7 @@ public class NettyClient {
                 logger.info("connect server  成功---------");
             }
             while (true) {
-                TimeUnit.SECONDS.sleep(5);
+                TimeUnit.SECONDS.sleep(11);
                 f.channel().writeAndFlush("heart.\n");
             }
 //            f.channel().closeFuture().sync();

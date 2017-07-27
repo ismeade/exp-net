@@ -3,6 +3,7 @@ package com.ade.exp.net.netty.http;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
@@ -11,6 +12,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
+import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,12 +49,13 @@ public class NettyHttpServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() { //有连接到达时会创建一个channel
                         protected void initChannel(SocketChannel ch) throws Exception {
                             // pipeline管理channel中的Handler，在channel队列中添加一个handler来处理业务
-                            ch.pipeline().addLast("http-decoder", new HttpRequestDecoder())
-                                    .addLast("http-aggregator", new HttpObjectAggregator(65535))
-                                    .addLast("http-chunked", new ChunkedWriteHandler())
+                            ch.pipeline()
+                                    .addLast(new HttpRequestDecoder())
+                                    .addLast(new HttpResponseEncoder())
                                     .addLast(new HttpServerHandler());
                         }
-                    });
+                    }).option(ChannelOption.SO_BACKLOG, 128)
+            .childOption(ChannelOption.SO_KEEPALIVE, true);
             ChannelFuture f = b.bind(port).sync();// 配置完成，开始绑定server，通过调用sync同步方法阻塞直到绑定成功
             if (f.isSuccess()) {
                 logger.info(this.getClass().getName() + " started and listen on " + f.channel().localAddress());

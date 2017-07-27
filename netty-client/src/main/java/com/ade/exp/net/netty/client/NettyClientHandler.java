@@ -1,6 +1,7 @@
 package com.ade.exp.net.netty.client;
 
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +10,7 @@ import org.slf4j.LoggerFactory;
  *
  * Created by liyang on 2017/4/10.
  */
-public class NettyClientHandler extends SimpleChannelInboundHandler<String> {
+public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -26,8 +27,19 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<String> {
      * 此方法会在接收到服务器数据后调用
      */
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         logger.info("Client received: " + msg);
+    }
+
+    /**
+     * 关闭通道
+     * @param ctx
+     * @throws Exception
+     */
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("channelUnregistered");
+        super.channelUnregistered(ctx);
     }
 
     /**

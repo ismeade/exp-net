@@ -13,9 +13,12 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -46,12 +49,13 @@ public class NettyServer {
                 b.channel(NioServerSocketChannel.class);
             }
             b.group(bossLoop, workerLoop)
-                    .option(ChannelOption.SO_BACKLOG, 1024)
+                    .option(ChannelOption.SO_BACKLOG, 1024) // 阻塞大小
                     .childHandler(new ChannelInitializer<SocketChannel>() { //有连接到达时会创建一个channel
                         protected void initChannel(SocketChannel ch) throws Exception {
                             // pipeline管理channel中的Handler，在channel队列中添加一个handler来处理业务
                             ch.pipeline().addLast(new LineBasedFrameDecoder(1024))
-                                    .addLast(new ReadTimeoutHandler(10)) // 空闲超时时间...
+//                                    .addLast(new ReadTimeoutHandler(60)) // 空闲超时时间...
+                                    .addLast(new IdleStateHandler(12, 12, 10, TimeUnit.SECONDS))
                                     .addLast(new StringDecoder())
                                     .addLast(new StringEncoder())
                                     .addLast(new NettyServerHandler());
