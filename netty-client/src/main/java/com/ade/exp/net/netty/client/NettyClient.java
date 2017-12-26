@@ -13,6 +13,8 @@ import io.netty.handler.codec.string.StringEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -52,7 +54,7 @@ public class NettyClient {
                 logger.info("connect server  成功---------");
             }
             while (true) {
-                TimeUnit.SECONDS.sleep(11);
+                TimeUnit.SECONDS.sleep(5);
                 f.channel().writeAndFlush("heart.\n");
             }
 //            f.channel().closeFuture().sync();
@@ -62,7 +64,6 @@ public class NettyClient {
     }
 
     public static void main(String[] args) throws Exception {
-
         new NettyClient("127.0.0.1", 8999).start();
     }
 

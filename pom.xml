@@ -16,6 +16,7 @@
         <module>netty-client</module>
         <module>netty-http</module>
         <module>java-http</module>
+        <module>nio-server</module>
     </modules>
 
     <packaging>pom</packaging>

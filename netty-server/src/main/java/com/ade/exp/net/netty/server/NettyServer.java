@@ -1,6 +1,7 @@
 package com.ade.exp.net.netty.server;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -10,6 +11,8 @@ import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.FixedLengthFrameDecoder;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
@@ -53,8 +56,10 @@ public class NettyServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() { //有连接到达时会创建一个channel
                         protected void initChannel(SocketChannel ch) throws Exception {
                             // pipeline管理channel中的Handler，在channel队列中添加一个handler来处理业务
-                            ch.pipeline().addLast(new LineBasedFrameDecoder(1024))
+                            ch.pipeline().addLast(new LineBasedFrameDecoder(1024)) // 解决粘包问题，行读取，以换行符结尾 1024代表读取最大长度，如果超过长度仍然没有换行符 则抛出异常并清空之前读到的字节
 //                                    .addLast(new ReadTimeoutHandler(60)) // 空闲超时时间...
+//                                    .addLast(new DelimiterBasedFrameDecoder(1024, Unpooled.copiedBuffer("$_".getBytes()))) // 使用自定义解码器
+//                                    .addLast(new FixedLengthFrameDecoder(20)) // 定长解码器
                                     .addLast(new IdleStateHandler(12, 12, 10, TimeUnit.SECONDS))
                                     .addLast(new StringDecoder())
                                     .addLast(new StringEncoder())

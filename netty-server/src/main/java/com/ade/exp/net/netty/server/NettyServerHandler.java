@@ -15,6 +15,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        System.out.println(ctx.channel().id().toString());
         String body = (String) msg;
         logger.info(ctx.channel().remoteAddress().toString());
         logger.info("server received data :" + body);
