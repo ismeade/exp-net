@@ -1,8 +1,7 @@
-package com.ade.exp.net.netty.client;
+package com.ade.exp.net.netty.tcp;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
